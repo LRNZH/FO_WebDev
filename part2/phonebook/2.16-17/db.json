@@ -1,0 +1,29 @@
+{
+  "persons": [
+    {
+      "name": "Ada Lovelace",
+      "number": "364-343-3434",
+      "id": 2
+    },
+    {
+      "name": "Dan Abramov",
+      "number": "1234-5675-7",
+      "id": 3
+    },
+    {
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": 4
+    },
+    {
+      "name": "Musa Ali",
+      "number": "8253-34-234234",
+      "id": 5
+    },
+    {
+      "name": "Musa Ali",
+      "number": "625343-384-34",
+      "id": 6
+    }
+  ]
+}
