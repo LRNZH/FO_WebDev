@@ -1,0 +1,15 @@
+.ImageSection {
+    margin-bottom: 4rem;
+}
+
+h2 {
+    color: #ff3300;
+    font-size: 1.8rem;
+    margin: 1rem 0;
+}
+
+p {
+    color: #44546a;
+    font-size: 1.2rem;
+    line-height: 1.6;
+}

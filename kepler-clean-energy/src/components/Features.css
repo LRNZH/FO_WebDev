@@ -1,0 +1,32 @@
+.Features {
+    background-color: #CCFF33;
+    padding: 2rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.col {
+    flex: 1;
+    margin: 1rem;
+    text-align: center;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin: 0 0 1rem 0;
+}
+
+p {
+    font-size: 1rem;
+    margin: 0;
+}
