@@ -101,7 +101,7 @@ app.get("/api/persons/:id", (request, response) => {
 app.get("/info", (req, res) => {
   const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
   if (maxId < 1) {
-    res.send(`<div>phonebook has no info.</div><div>Date()</div>`);
+    res.send(`<div>Phonebook has no info.</div><div>${Date()}</div>`);
   } else if (maxId === 1) {
     res.send(`<div>Phonebook has info for ${maxId} person.</div>
     <div>${Date()}</div>`);
