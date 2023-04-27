@@ -6,16 +6,6 @@ bloglistRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-bloglistRouter.get('/:id', async (request, response) => {
-  const blog = await Blog.findById(request.params.id)
-  if (blog) {
-    response.json(blog)
-  } else {
-    response.status(404).end()
-  }
-})
-
-
 bloglistRouter.post('/', async (request, response) => {
   const body = request.body
 
@@ -23,11 +13,20 @@ bloglistRouter.post('/', async (request, response) => {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes,
+    likes: body.likes || 0 
   })
 
   const savedBlog = await blog.save()
   response.status(201).json(savedBlog)
+})
+
+bloglistRouter.get('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (blog) {
+    response.json(blog)
+  } else {
+    response.status(404).end()
+  }
 })
 
 bloglistRouter.delete('/:id', async (request, response) => {
@@ -42,7 +41,7 @@ bloglistRouter.put('/:id', (request, response, next) => {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes,
+    likes: body.likes || 0 
   })
 
   Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
