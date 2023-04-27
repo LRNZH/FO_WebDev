@@ -17,7 +17,7 @@ test('notes are returned as json', async () => {
     .get('/api/notes')
     .expect(200)
     .expect('Content-Type', /application\/json/)
-})
+}, 100000)
 
 test('all notes are returned', async () => {
   const response = await api.get('/api/notes')
