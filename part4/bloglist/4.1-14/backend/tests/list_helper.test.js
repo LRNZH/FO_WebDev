@@ -158,7 +158,6 @@ describe('mostBlogs', () => {
 
     const result = listHelper.mostBlogs(blogs)
     expect(result).toMatchObject({ author: expect.any(String), blogs: 3 })
-    console.log(result)
   })
 
   test('returns an empty object if the input array is empty', () => {

@@ -10,14 +10,14 @@ const helper = require('./test_helper')
 beforeEach(async () => {
   await Note.deleteMany({})
   await Note.insertMany(helper.initialNotes)
-})
+}, 100000)
 
 test('notes are returned as json', async () => {
   await api
     .get('/api/notes')
     .expect(200)
     .expect('Content-Type', /application\/json/)
-}, 100000)
+})
 
 test('all notes are returned', async () => {
   const response = await api.get('/api/notes')
