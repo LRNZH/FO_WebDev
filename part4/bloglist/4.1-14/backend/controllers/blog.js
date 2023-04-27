@@ -1,4 +1,4 @@
-const bloglistRouter = require('express').Router
+const bloglistRouter = require('express').Router()
 const Blog = require('../models/blog')
 
 bloglistRouter.get('/', (request, response) => {
@@ -24,9 +24,9 @@ bloglistRouter.post('/', (request, response, next) => {
 
   const blog = new Blog({
     title: body.title,
-  author: body.author,
-  url: body.url,
-  likes: body.likes,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
   })
 
   blog.save()
@@ -37,7 +37,7 @@ bloglistRouter.post('/', (request, response, next) => {
 })
 
 bloglistRouter.delete('/:id', (request, response, next) => {
-  Note.findByIdAndRemove(request.params.id)
+  Blog.findByIdAndDelete(request.params.id)
     .then(() => {
       response.status(204).end()
     })
@@ -49,9 +49,9 @@ bloglistRouter.put('/:id', (request, response, next) => {
 
   const blog = new Blog({
     title: body.title,
-  author: body.author,
-  url: body.url,
-  likes: body.likes,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
   })
 
   Blog.findByIdAndUpdate(request.params.id, note, { new: true })

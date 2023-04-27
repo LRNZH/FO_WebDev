@@ -1,7 +1,19 @@
 POST http://localhost:3001/api/notes
 Content-Type: application/json
 
+
 {
-  "content": "VS code rest client is a pretty handy tool",
-  "important": true
+content: "HTML is Easy",
+important: false,
+id: "6445658ff8e75377fb9fec20"
+},
+{
+content: "Mongoose makes use of mongo easy",
+important: true,
+id: "644577bbf8fd879dc9ced787"
+},
+{
+content: "Callback-functions suck",
+important: true,
+id: "644577da01ebd767b4e72ab4"
 }
