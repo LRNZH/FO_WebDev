@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Macbeth",
+  "author": "William Shakespeare",
+  "url": "www.cambridge.com",
+  "likes": 78,
+  "userId": "644bbe9115da3d4cedd744aa"
+}
