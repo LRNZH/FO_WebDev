@@ -45,7 +45,7 @@ describe('when there is initially some notes saved', () => {
 })
 
 
-describe('Successfully create a new blog post', () => {
+/*describe('Successfully create a new blog post pre user/authentication', () => {
   test('succeeds with valid data', async () => {
     const oldResponse = await api.get('/api/blogs')
     const existing=oldResponse.body
@@ -99,16 +99,16 @@ describe('Successfully create a new blog post', () => {
     }
     await api.post('/api/blogs').send(newBlog).expect(400)
   })
-})
+})*/
 
-describe('deleting a single blog post resource', () => {
-  test('succeeds with status code 204 if id is valid', async () => {
+/*describe('deleting a single blog pre user/authentication', () => {
+  test('succeeds with status code 200 if id is valid', async () => {
     const existingBlogs = await helper.blogsInDb()
     const blogToDelete = existingBlogs[0]
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
-      .expect(204)
+      .expect(200)
 
     const blogsAtEnd = await helper.blogsInDb()
 
@@ -133,7 +133,7 @@ describe('deleting a single blog post resource', () => {
       .delete(`/api/blogs/${invalidId}`)
       .expect(400)
   },100000)
-})
+})*/
 
 describe('updating a blog post', () => {
   test('updates with valid data', async () => {

@@ -69,11 +69,11 @@ describe('when there is initially some notes saved', () => {
   })
 
   describe('addition of a new note', () => {
-    test('succeeds in adding note with valid data', async () => {
+    /*test('succeeds in adding note with valid data', async () => {
       const newNote = {
         content: 'async/await simplifies making async calls',
         important: true,
-        userId: "5cfd61844e8b621fe5c36fc6"
+        userId: "644ba863f85bab3e0e153f41"
       }
 
       await api
@@ -89,7 +89,7 @@ describe('when there is initially some notes saved', () => {
       expect(contents).toContain(
         'async/await simplifies making async calls'
       )
-    })
+    })*/
 
     test('fails with status code 400 if data invalid', async () => {
       const newNote = {

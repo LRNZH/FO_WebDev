@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const bcrypt = require('bcryptjs')
+const helper = require('../utils/test_helper')
 const app = require('../app')
 const User = require('../models/user')
 
@@ -24,7 +25,7 @@ describe('creating a new user', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const users = await User.find({})
+    const users = await helper.usersInDb()
     expect(users).toHaveLength(1)
 
     const savedUser = users[0]
@@ -45,7 +46,7 @@ describe('creating a new user', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
-    const users = await User.find({})
+    const users = await helper.usersInDb()
     expect(users).toHaveLength(0)
   })
 
@@ -62,7 +63,7 @@ describe('creating a new user', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
-    const users = await User.find({})
+    const users = await helper.usersInDb()
     expect(users).toHaveLength(0)
   })
 
@@ -89,7 +90,7 @@ describe('creating a new user', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
-    const users = await User.find({})
+    const users = await helper.usersInDb()
     expect(users).toHaveLength(1)
   })
 })

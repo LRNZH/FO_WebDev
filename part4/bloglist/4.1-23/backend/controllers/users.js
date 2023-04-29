@@ -32,7 +32,6 @@ usersRouter.post('/', async (request, response) => {
       const blog = await Blog.findById(body.blog)
       blog.user = savedUser._id
       await blog.save()
-      
     }
 
   } catch (exception) {

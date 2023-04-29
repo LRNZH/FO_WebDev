@@ -1,10 +1,10 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkb2JpIiwiaWQiOiI2NDRiYmU5MTE1ZGEzZDRjZWRkNzQ0YWEiLCJpYXQiOjE2ODI3NjA2NTUsImV4cCI6MTY4Mjc2NDI1NX0.eMfq5a4DDg6WmP5Jnta5eL9q3rXW1PXL-IgvFY60ewY
 
 {
-  "title": "Macbeth",
-  "author": "William Shakespeare",
-  "url": "www.cambridge.com",
-  "likes": 78,
-  "userId": "644bbe9115da3d4cedd744aa"
+  "title": "Hello Guy",
+  "author": "Ann Astray",
+  "url": "www.chill.com",
+  "likes": 193
 }

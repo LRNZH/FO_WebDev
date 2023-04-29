@@ -1,6 +1,8 @@
 const bloglistRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+const middleware = require('../utils/middleware')
+
 
 bloglistRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -8,9 +10,15 @@ bloglistRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-bloglistRouter.post('/', async (request, response) => {
+bloglistRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async (request, response) => {
   const body = request.body
-  const user = await User.findById(body.userId)
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
+  const user = request.user
 
   const blog = new Blog({
     title: body.title,
@@ -23,6 +31,7 @@ bloglistRouter.post('/', async (request, response) => {
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
+
   response.status(201).json(savedBlog)
 })
 
@@ -35,19 +44,38 @@ bloglistRouter.get('/:id', async (request, response) => {
   }
 })
 
-bloglistRouter.delete('/:id', async (request, response) => {
+bloglistRouter.delete('/:id', middleware.tokenExtractor, middleware.userExtractor, async (request, response) => {
   const { id } = request.params
+  const user = request.user
+
+  if (!request.token) {
+    return response.status(401).json({ error: 'Token missing' })
+  }
+
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
   try {
-    const deletedBlog = await Blog.findByIdAndDelete(id)
-    if (!deletedBlog) {
+    const blog = await Blog.findById(id)
+
+    if (!blog) {
       return response.status(404).json({ error: 'Blog post not found' })
     }
-    response.status(204).end()
+
+    if (blog.user.toString() !== decodedToken.id.toString()) {
+      return response.status(403).json({ error: `Only ${request.user.name} can delete this blog post` })
+    }
+
+    await Blog.findByIdAndDelete(id)
+
+    response.status(200).json({
+      message: `${user.name} has deleted blog with title: ${blog.title} & id: ${ id }`
+    })
   } catch (error) {
-    response.status(400).send({ error: 'malformatted id' })
+    response.status(400).send({ error: 'Bad request' })
   }
 })
+
+
 
 bloglistRouter.put('/:id', async (request, response) => {
   const body = request.body

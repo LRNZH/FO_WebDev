@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0NGJiNjFlYWFjNzQzOGY5Zjg4MmM3YSIsImlhdCI6MTY4Mjc1NjA1NX0.SHpuAcxtJbk97PrYAZNdSY6QVZAwcmYIi0cLDDaz2RQ
 
 
 {
-    "content": "Let's try to create a new note",
-    "important": true,
-    "userId": "644ba863f85bab3e0e153f41"
+    "content": "Love is blind",
+    "important": true
 }
