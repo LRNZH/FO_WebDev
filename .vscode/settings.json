@@ -1,3 +1,4 @@
 {
-    "vs-code-prettier-eslint.prettierLast": true
+    "vs-code-prettier-eslint.prettierLast": true,
+    "git.ignoreLimitWarning": true
 }
