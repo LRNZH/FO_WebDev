@@ -1,11 +1,21 @@
 
-note_example/backend/.env
+.vscode
+
+note_example
 
 part3/phonebook/3.9-21/backend/.env
 
 part4/bloglist/4.1-23/backend/.env
 
-/.vscode
+part5/bloglist/5.1-23/backend/.env
 
-/kepler-clean-energy
+part7/bloglist/backend/.env
+
+query-notes_example
+
+react-router_example
+
+redux-notes_example
+
+webpack_example
 
