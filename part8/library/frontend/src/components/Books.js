@@ -1,10 +1,25 @@
 import { useState } from "react";
-import { GET_BOOKS } from "../queries";
-import { useQuery } from "@apollo/client";
+import { GET_BOOKS, BOOK_ADDED } from "../queries";
+import { useQuery, useSubscription } from "@apollo/client";
 
 const Books = (props) => {
   const { loading, error, data } = useQuery(GET_BOOKS);
   const [selectedGenre, setSelectedGenre] = useState("");
+
+  const { data: subscriptionData } = useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded;
+      const dataInStore = client.readQuery({ query: GET_BOOKS });
+
+      client.writeQuery({
+        query: GET_BOOKS,
+        data: {
+          allBooks: [...dataInStore.allBooks, addedBook],
+        },
+      });
+      client.query({ query: GET_BOOKS });
+    },
+  });
 
   if (!props.show) {
     return null;
@@ -21,7 +36,6 @@ const Books = (props) => {
   const books = data.allBooks;
 
   const genres = [...new Set(books.flatMap((book) => book.genres))];
-
 
   const handleGenreFilter = (genre) => {
     setSelectedGenre(genre);
@@ -45,7 +59,8 @@ const Books = (props) => {
             <tr key={book.id}>
               <td>{book.title}</td>
               <td>
-                {book.author.name} {book.author.born &&(`(born ${book.author.born})`)}
+                {book.author.name}{" "}
+                {book.author.born && `(born ${book.author.born})`}
               </td>
               <td>{book.published}</td>
             </tr>

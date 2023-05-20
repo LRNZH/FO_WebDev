@@ -1,9 +1,17 @@
-import { GET_AUTHORS, UPDATE_AUTHOR, GET_BOOKS } from "../queries";
-import { useState } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+/* /components/Author.js */
+import { GET_AUTHORS, UPDATE_AUTHOR, GET_BOOKS, BOOK_ADDED } from "../queries";
+import { useState, useEffect } from "react";
+import { useQuery, useMutation, useSubscription } from "@apollo/client";
 
 const Authors = ({ show, token, displayNotification }) => {
   const { loading, error, data } = useQuery(GET_AUTHORS);
+  const [authors, setAuthors] = useState([]);
+
+  useEffect(() => {
+    if (data && data.allAuthors) {
+      setAuthors(data.allAuthors);
+    }
+  }, [data]);
 
   const [name, setName] = useState("");
   const [born, setBorn] = useState("");
@@ -13,16 +21,32 @@ const Authors = ({ show, token, displayNotification }) => {
   };
 
   const [updateAuthor] = useMutation(UPDATE_AUTHOR, {
-    context: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
     refetchQueries: [{ query: GET_AUTHORS }, { query: GET_BOOKS }],
     onCompleted: () => {
       displayNotification("Author updated successfully.");
     },
   });
+
+  const { data: bookAddedData } = useSubscription(BOOK_ADDED);
+
+  useEffect(() => {
+    if (bookAddedData && bookAddedData.bookAdded) {
+      const { bookAdded } = bookAddedData;
+      setAuthors((prevAuthors) => {
+        const updatedAuthors = prevAuthors.map((author) => {
+          if (author.name === bookAdded.author.name) {
+            return {
+              ...author,
+              bookCount: author.bookCount + 1,
+            };
+          }
+          return author;
+        });
+
+        return updatedAuthors;
+      });
+    }
+  }, [bookAddedData]);
 
   const birthYearSubmit = (event) => {
     event.preventDefault();
@@ -50,8 +74,6 @@ const Authors = ({ show, token, displayNotification }) => {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-
-  const authors = data.allAuthors;
 
   return (
     <div>

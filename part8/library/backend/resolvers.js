@@ -5,6 +5,9 @@ const Author = require("./models/author");
 const Book = require("./models/book");
 const User = require("./models/user");
 
+const { PubSub } = require("graphql-subscriptions");
+const pubsub = new PubSub();
+
 const resolvers = {
   Query: {
     bookCount: () => async () => Book.collection.countDocuments(),
@@ -57,6 +60,7 @@ const resolvers = {
       return genres;
     },
     me: (root, args, context) => {
+      console.log('me context.user', context.user)
       const user = context.currentUser;
       if (!user) {
         throw new Error("Authentication required.");
@@ -70,7 +74,8 @@ const resolvers = {
       const user = context.currentUser;
 
       if (!user) {
-        throw new Error("Authentication required.");
+        throw new Error("Authentication required.", context.user);
+   
       }
 
       try {
@@ -93,6 +98,9 @@ const resolvers = {
         savedBook.author.bookCount = await Book.countDocuments({
           author: existingAuthor._id,
         });
+
+        pubsub.publish("BOOK_ADDED", { bookAdded: savedBook });
+
         return savedBook;
       } catch (error) {
         throw new Error(
@@ -171,7 +179,6 @@ const resolvers = {
         throw new ApolloError("Invalid password.", "INVALID_CREDENTIALS_ERROR");
       }
 
-
       if (favoriteGenre) {
         user.favoriteGenre = favoriteGenre;
         await user.save();
@@ -183,6 +190,11 @@ const resolvers = {
         value: token,
         user,
       };
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
     },
   },
 };

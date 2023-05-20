@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSubscription } from "@apollo/client";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
@@ -16,9 +17,10 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [notification, setNotification] = useState("");
 
-  useEffect(() => {
-    setToken(localStorage.getItem("library-user-token"));
-  }, [setToken]);
+useEffect(() => {
+  setToken(localStorage.getItem("library-user-token"));
+  setFavoriteGenre(localStorage.getItem("favorite-genre")); // Retrieve the favorite genre
+}, [setToken]);
 
   const displayNotification = (message, duration = 4000, type = "default") => {
     setNotification({ message, type });
@@ -36,19 +38,20 @@ const App = () => {
     setFavoriteGenre("");
   };
 
-  const handleLogin = (token, favoriteGenre) => {
-    setToken(token);
-    localStorage.setItem("library-user-token", token);
-    setFavoriteGenre(favoriteGenre);
-    setPage("recommend");
-  };
+const handleLogin = (token, favoriteGenre) => {
+  setToken(token);
+  localStorage.setItem("library-user-token", token);
+  localStorage.setItem("favorite-genre", favoriteGenre);
+  setFavoriteGenre(favoriteGenre);
+  setPage("recommend");
+};
 
   const renderNavigation = () => {
     if (!token) {
       return (
         <div>
           <button onClick={() => setPage("authors")}>authors</button>
-          <button onClick={() => setPage("books")}>books</button>
+          <button onClick={() => setPage("all books")}>all books</button>
           <button onClick={() => setPage("login")}>login</button>
           <button onClick={() => setPage("new user")}>new user?</button>
         </div>
@@ -71,6 +74,7 @@ const App = () => {
   };
 
   const renderPage = () => {
+    
     if (page === "authors") {
       return (
         <Authors
@@ -86,6 +90,7 @@ const App = () => {
           selectedGenre={selectedGenre}
           setSelectedGenre={setSelectedGenre}
           token={token}
+          displayNotification={displayNotification}
         />
       );
     } else if (page === "recommend" && token) {
@@ -95,6 +100,7 @@ const App = () => {
         <Login
           handleLogin={handleLogin}
           displayNotification={displayNotification}
+          setFavoriteGenre={setFavoriteGenre}
         />
       );
     } else if (page === "new user" && !token) {

@@ -53,6 +53,12 @@ const typeDefs = `
 
     login(username: String!, password: String!, favoriteGenre: String): Token!
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
+
+  # Existing types and queries/mutations
 `;
 
 module.exports = typeDefs;

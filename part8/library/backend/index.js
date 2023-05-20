@@ -1,13 +1,26 @@
 const { ApolloServer } = require("@apollo/server");
-const { startStandaloneServer } = require("@apollo/server/standalone");
-const { ApolloError } = require("apollo-server-errors");
+const {
+  ApolloServerPluginDrainHttpServer,
+} = require("@apollo/server/plugin/drainHttpServer");
+const { expressMiddleware } = require("@apollo/server/express4");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+
+const { WebSocketServer } = require("ws");
+const { useServer } = require("graphql-ws/lib/use/ws");
+
+const http = require("http");
+const express = require("express");
+const cors = require("cors");
+
+const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-require("dotenv").config();
-const jwt = require("jsonwebtoken");
+const User = require("./models/user");
 
 const typeDefs = require("./schema");
 const resolvers = require("./resolvers");
+
+require("dotenv").config();
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -22,47 +35,63 @@ mongoose
     console.log("error connection to MongoDB:", error.message);
   });
 
+mongoose.set("debug", true);
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+// setup is now within a function
+const start = async () => {
+  const app = express();
+  const httpServer = http.createServer(app);
 
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-  context: ({ req }) => {
-    const authHeader = req.headers.authorization;
-    let currentUser = null;
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: "/",
+  });
 
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      const token = authHeader.substring(7); //
-      try {
-        currentUser = jwt.verify(token, process.env.JWT_SECRET);
-      } catch (error) {
-        throw new Error("Authentication failed. Invalid token.");
-      }
-    }
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
+  const serverCleanup = useServer({ schema }, wsServer);
 
-    return { currentUser };
-  },
-  formatError: (error) => {
-    if (error.extensions && error.extensions.code === "ADD_BOOK_ERROR") {
-      return new ApolloError(error.message, "ADD_BOOK_ERROR");
-    }
-    if (error.extensions && error.extensions.code === "EDIT_AUTHOR_ERROR") {
-      return new ApolloError(error.message, "EDIT_AUTHOR_ERROR");
-    }
-    if (error.extensions && error.extensions.code === "USERNAME_TAKEN_ERROR") {
-      return new ApolloError(error.message, "USERNAME_TAKEN_ERROR");
-    }
-    if (
-      error.extensions &&
-      error.extensions.code === "INVALID_CREDENTIALS_ERROR"
-    ) {
-      return new ApolloError(error.message, "INVALID_CREDENTIALS_ERROR");
-    }
-    return error;
-  },
-}).then(({ url }) => {
-  console.log(`Server ready at ${url}`);
-});
+  const server = new ApolloServer({
+    schema,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose();
+            },
+          };
+        },
+      },
+    ],
+   });
+
+  await server.start();
+
+  app.use(
+    "/",
+    cors(),
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req }) => {
+        const auth = req ? req.headers.authorization : null;
+        if (auth && auth.startsWith("Bearer ")) {
+          const decodedToken = jwt.verify(
+            auth.substring(7),
+            process.env.JWT_SECRET
+          );
+          const currentUser = await User.findById(decodedToken.id)
+          return { currentUser };
+        }
+      },
+    })
+  );
+
+  const PORT = 4000;
+
+  httpServer.listen(PORT, () =>
+    console.log(`Server is now running on http://localhost:${PORT}`)
+  );
+};
+
+start();

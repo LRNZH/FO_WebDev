@@ -1,29 +1,30 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { GET_BOOKS, GET_AUTHORS, ADD_BOOK } from "../queries";
+import { GET_AUTHORS, ADD_BOOK } from "../queries";
 
-const NewBook = ({ show, token, displayNotification }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [published, setPublished] = useState("");
+const NewBook = ({ show, displayNotification }) => {
+  const [title, setTitle] = useState("Crazy Book");
+  const [author, setAuthor] = useState("John Ingram");
+  const [published, setPublished] = useState("2021");
   const [genre, setGenre] = useState("");
-  const [genres, setGenres] = useState([]);
+  const [genres, setGenres] = useState(["political activism", "activism"]);
 
-  const [AddBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: GET_BOOKS }, { query: GET_AUTHORS }],
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: GET_BOOKS });
-      store.writeQuery({
-        query: GET_BOOKS,
-        data: {
-          allBooks: [...dataInStore.allBooks, response.data.addBook],
-        },
-      });
-    },
-    context: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  const [addBook] = useMutation(ADD_BOOK, {
+    update: (cache, { data: { addBook } }) => {
+      const { allAuthors } = cache.readQuery({ query: GET_AUTHORS });
+      const authorIndex = allAuthors.findIndex(
+        (a) => a.name === addBook.author.name
+      );
+      if (authorIndex !== -1) {
+        const updatedAuthor = { ...allAuthors[authorIndex] };
+        updatedAuthor.bookCount += 1;
+        const updatedAuthors = [...allAuthors];
+        updatedAuthors.splice(authorIndex, 1, updatedAuthor);
+        cache.writeQuery({
+          query: GET_AUTHORS,
+          data: { allAuthors: updatedAuthors },
+        });
+      }
     },
     onCompleted: () => {
       displayNotification("Book created successfully.");
@@ -33,7 +34,9 @@ const NewBook = ({ show, token, displayNotification }) => {
   const submit = async (event) => {
     event.preventDefault();
 
-    await AddBook({ variables: { title, author, published: parseInt(published), genres } });
+    await addBook({
+      variables: { title, author, published: parseInt(published), genres },
+    });
 
     setTitle("");
     setPublished("");
