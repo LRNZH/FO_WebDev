@@ -1,4 +1,3 @@
-/* /components/Author.js */
 import { GET_AUTHORS, UPDATE_AUTHOR, GET_BOOKS, BOOK_ADDED } from "../queries";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useSubscription } from "@apollo/client";

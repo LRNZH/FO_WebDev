@@ -1,5 +1,3 @@
-// components/Registration.js
-
 import React, { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { REGISTER_USER, GET_GENRES } from "../queries";

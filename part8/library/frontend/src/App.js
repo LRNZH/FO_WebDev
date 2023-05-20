@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useSubscription } from "@apollo/client";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
@@ -19,7 +18,7 @@ const App = () => {
 
 useEffect(() => {
   setToken(localStorage.getItem("library-user-token"));
-  setFavoriteGenre(localStorage.getItem("favorite-genre")); // Retrieve the favorite genre
+  setFavoriteGenre(localStorage.getItem("favorite-genre"));
 }, [setToken]);
 
   const displayNotification = (message, duration = 4000, type = "default") => {

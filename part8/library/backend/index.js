@@ -37,7 +37,6 @@ mongoose
 
 mongoose.set("debug", true);
 
-// setup is now within a function
 const start = async () => {
   const app = express();
   const httpServer = http.createServer(app);
