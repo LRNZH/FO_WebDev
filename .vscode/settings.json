@@ -1,4 +1,10 @@
 {
     "vs-code-prettier-eslint.prettierLast": true,
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "cSpell.words": [
+        "githubrepos"
+    ],
+    "eslint.workingDirectories": [
+        {"mode": "auto"}
+    ],
 }
