@@ -1,10 +1,6 @@
 {
-    "vs-code-prettier-eslint.prettierLast": true,
-    "git.ignoreLimitWarning": true,
-    "cSpell.words": [
-        "githubrepos"
-    ],
-    "eslint.workingDirectories": [
-        {"mode": "auto"}
-    ],
+  "vs-code-prettier-eslint.prettierLast": true,
+  "git.ignoreLimitWarning": true,
+  "cSpell.words": ["Formik", "githubrepos", "Pressable", "signin"],
+  "eslint.workingDirectories": [{ "mode": "auto" }]
 }
