@@ -2,5 +2,9 @@
   "vs-code-prettier-eslint.prettierLast": true,
   "git.ignoreLimitWarning": true,
   "cSpell.words": ["Formik", "githubrepos", "Pressable", "signin"],
-  "eslint.workingDirectories": [{ "mode": "auto" }]
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ]
 }
