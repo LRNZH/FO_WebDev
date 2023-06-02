@@ -1,0 +1,5 @@
+.env
+node_modules
+.DS_Store
+database.sqlite
+part10/part3/frontend/rate-githubrepos-app/.env

@@ -1,7 +1,17 @@
 {
   "vs-code-prettier-eslint.prettierLast": true,
   "git.ignoreLimitWarning": true,
-  "cSpell.words": ["Formik", "githubrepos", "Pressable", "signin"],
+  "cSpell.words": [
+    "createreview",
+    "Formik",
+    "githubrepos",
+    "Pressable",
+    "refetched",
+    "Searchbar",
+    "signin",
+    "signout",
+    "signup"
+  ],
   "eslint.workingDirectories": [
     {
       "mode": "auto"
