@@ -13,3 +13,12 @@ jobs:
       - name: Say hello
         run: |
           echo "Hello World!"
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Print date
+        run: date
+
+      - name: List directory contents in long format
+        run: ls -l
