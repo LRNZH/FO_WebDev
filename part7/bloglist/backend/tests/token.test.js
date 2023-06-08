@@ -142,14 +142,14 @@ describe('deletion of a blog', () => {
     await newBlog.save()
   })
 
-  test('succeeds with status code 200 if id is valid and token is valid', async () => {
+  test('succeeds with status code 204 if id is valid and token is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
       .set('authorization', `bearer ${token}`)
-      .expect(200)
+      .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
 
@@ -310,13 +310,12 @@ describe('getting user information during blog post or delete', () => {
 
     const blog = await Blog(newBlog).save()
 
-    const deleteResponse = await api
+    await api
       .delete(`/api/blogs/${blog._id}`)
       .set('authorization', `bearer ${token}`)
-      .expect(200)
+      .expect(204)
 
 
-    expect(deleteResponse.body.message).toEqual(`${newUser.name} has deleted blog with title: ${blog.title} & id: ${blog.id}`)
     const updatedUser = await User.findById(newUser.id)
     expect(updatedUser.blogs).not.toContain(blog._id)
   }, 100000)
