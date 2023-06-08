@@ -55,12 +55,16 @@ const populateDatabase = async () => {
 }
 
 const nonExistingId = async () => {
-  const blog = new Blog({ title: 'willremovethissoon',
-    url: 'www.deletesoon.com' })
+  const blog = new Blog({
+    title: 'willremovethissoon',
+    author: 'John Doe',
+    url: 'www.deletesoon.com'
+  })
   await blog.save()
   await blog.deleteOne()
   return blog._id.toString()
 }
+
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({})

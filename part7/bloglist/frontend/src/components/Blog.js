@@ -31,29 +31,36 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
     backgroundColor: "#e3f0fe",
   };
 
-  const cardActions = [
-    <Space key="actions">
-      <Button onClick={toggleDetails}>
-        {showDetails ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-      </Button>
-      {blog.user && blog.user.name === user.name && (
-        <Popconfirm
-          title={`Are you sure you want to delete "${blog.title}"?`}
-          onConfirm={removeBlog}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button type="text" icon={<DeleteOutlined />} danger />
-        </Popconfirm>
-      )}
-    </Space>,
-  ];
+const cardActions = [
+  <Space key="actions">
+    <Button id={`toggle-details-button`} onClick={toggleDetails}>
+      {showDetails ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+    </Button>
+    {blog.user && blog.user.name === user.name && (
+      <Popconfirm
+        id="delete-popconfirm"
+        title={`Are you sure you want to delete "${blog.title}"?`}
+        onConfirm={removeBlog}
+        okText="Yes"
+        cancelText="No"
+      >
+        <Button id={`delete-button`} type="text" icon={<DeleteOutlined />} danger />
+      </Popconfirm>
+    )}
+  </Space>,
+];
+
+
+  if (!blog) {
+    return null;
+  }
 
   return (
     <Card
+      id='card'
       title={
         <Link
-          to={`/users/${blog.user.id}`}
+          to={`/blogs/${blog.id}`}
         >{`"${blog.title}" by ${blog.author}`}</Link>
       }
       actions={cardActions}
@@ -63,8 +70,8 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
         <>
           <p>{blog.url}</p>
           <Space>
-            <Button type="text" onClick={updateLikes} icon={<LikeOutlined />} />
-            <span>{blog.likes} likes</span>
+            <Button id={`like-button`} type="text" onClick={updateLikes} icon={<LikeOutlined />} />
+            <span id="like-count">{blog.likes} likes</span>
           </Space>
           {blog.user && (
             <div>

@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { Typography, Button, Input, List, Form, Spin } from "antd";
+import { LikeOutlined, LoadingOutlined } from "@ant-design/icons";
+
+const { Title } = Typography;
+const { TextArea } = Input;
 
 const BlogDetails = ({ handleLike, submitComment }) => {
   const { id } = useParams();
@@ -18,32 +23,42 @@ const BlogDetails = ({ handleLike, submitComment }) => {
   };
 
   if (!blog) {
-    return <div>Loading...</div>;
+    return <Spin indicator={<LoadingOutlined />} />;
   }
 
   return (
     <div>
-      <h2>
+      <Title level={2}>
         "{blog.title}" by {blog.author}
-      </h2>
+      </Title>
       <div>
         <a href={blog.url}>{blog.url}</a>
       </div>
       <div>
-        {blog.likes} likes: <button onClick={updateLikes}>like</button>
+        {blog.likes} likes:{" "}
+        <Button type="text" onClick={updateLikes} icon={<LikeOutlined />} />
       </div>
-      <div>added by {blog.user.name}</div>
-      <h3>Comments</h3>
-      <ul>
-        {blog.comments.map(
-          (comment) =>
-            comment.content && <li key={comment._id}>{comment.content}</li>
-        )}
-      </ul>
-      <form onSubmit={(event) => submitComment(event, blog, comment)}>
-        <input type="text" value={comment} onChange={handleCommentChange} />
-        <button type="submit">add comment</button>
-      </form>
+      <div>Added by {blog.user.name}</div>
+      <Title level={3}>Comments</Title>
+      <List
+        dataSource={blog.comments}
+        renderItem={(item) => <List.Item>{item.content}</List.Item>}
+      />
+      <Form onFinish={(event) => submitComment(event, blog, comment)}>
+        <Form.Item>
+          <TextArea
+            rows={4}
+            value={comment}
+            onChange={handleCommentChange}
+            placeholder="Add a comment"
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Add Comment
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

@@ -21,7 +21,6 @@ import {
   addComment,
 } from "./reducers/blogReducer";
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   useNavigate,
@@ -34,6 +33,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [comment, setComment] = useState("");
 
   const dispatch = useDispatch();
@@ -52,8 +52,9 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(initializeBlogs());
-  }, [dispatch]);
+      dispatch(initializeBlogs())
+}, []);
+
 
   useEffect(() => {
     dispatch(initializeUsers());
@@ -178,12 +179,12 @@ const App = () => {
       {!user && loginForm()}
       {user && (
         <div>
-          <Togglable buttonLabel="New Blog" ref={blogFormRef}>
+          <Togglable buttonLabel="Add New Blog" ref={blogFormRef}>
             <BlogForm createBlog={createBlog} />
           </Togglable>
         </div>
       )}
-      <div>
+      <div id="card-container">
         <Routes>
           <Route
             path="/"
@@ -192,6 +193,7 @@ const App = () => {
                 sortedBlogs.map((blog) => (
                   <Blog
                     key={blog.id}
+                    id="blog"
                     blog={blog}
                     handleLike={handleLike}
                     handleDelete={handleDelete}

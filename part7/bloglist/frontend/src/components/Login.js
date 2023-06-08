@@ -17,6 +17,7 @@ const Login = (props) => {
       <Form.Item
         label="Username"
         name="username"
+        id="username-input"
         rules={[{ required: true, message: "Please enter your username!" }]}
       >
         <Input
@@ -29,6 +30,7 @@ const Login = (props) => {
       <Form.Item
         label="Password"
         name="password"
+        id="password-input"
         rules={[{ required: true, message: "Please enter your password!" }]}
       >
         <Input.Password

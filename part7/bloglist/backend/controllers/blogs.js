@@ -7,10 +7,8 @@ bloglistRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({}).populate('user', { username: 1, name: 1 })
     .populate('comments', { content: 1 })
-  console.log('received GET blogs', blogs)
 
   if (blogs.length === 0) {
-    console.log('no blog')
     return response.status(404).json({ error: 'blog not found' })
   }
 
@@ -48,7 +46,6 @@ bloglistRouter.post(
     user.blogsCreated += 1
     await user.save()
     await savedBlog.populate('user', { username: 1, name: 1 })
-    console.log('put router returned Blog', savedBlog)
     response.status(201).json(savedBlog)
   }
 )
@@ -72,7 +69,7 @@ bloglistRouter.delete(
     }
 
     if (blogToDelete.user.toString() !== user._id.toString()) {
-      return response.status(401).json({ error: 'unauthorized operation' })
+      return response.status(403).json({ error: `Only ${user.name} can delete this blog post` })
     }
 
     await Blog.findByIdAndDelete(request.params.id)
@@ -87,16 +84,25 @@ bloglistRouter.delete(
 
 bloglistRouter.put('/:id', async (request, response) => {
   const body = request.body
-
   const blog = {
     likes: body.likes,
   }
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
-    new: true,
-  }).populate('user', { username: 1, name: 1 })
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    blog,
+    {
+      new: true,
+    }
+  ).populate('user', { username: 1, name: 1 })
+
+  if (!updatedBlog) {
+    return response.status(404).json({ error: 'Blog not found' })
+  }
+
   response.json(updatedBlog)
 })
+
 
 
 module.exports = bloglistRouter
