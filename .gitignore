@@ -13,6 +13,10 @@ part7/bloglist/backend/.env
 
 part8/library/backend/.env
 
+part13/bloglist/.env
+
+part13/notes
+
 query-notes_example
 
 react-router_example
